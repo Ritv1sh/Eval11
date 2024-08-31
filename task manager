@@ -1,0 +1,108 @@
+class TaskManager:
+    def __init__(self):
+        self.tasks = {}                  #dict
+
+    def add_task(self, task_id, name, status):
+        if task_id in self.tasks:
+            print("Task already exists.")
+        else:
+            self.tasks[task_id] = {'name': name, 'status': status}
+            print(f"Task '{name}' added with ID {task_id}.")
+
+    def update_task(self, task_id, name=None, status=None):
+        if task_id not in self.tasks:
+            print(f"Task with ID {task_id} does not exist.")
+        else:
+            if name:
+                self.tasks[task_id]['name'] = name
+            elif status:
+                self.tasks[task_id]['status'] = status
+            else:
+                print("No tasks updated")
+            print(f"Task with ID {task_id} updated.")
+
+    def delete_task(self, name):
+        for task_id in list(self.tasks.keys()):
+            flag=False
+            if self.tasks[task_id]['name'] == name:
+                del self.tasks[task_id]
+                print(f"Task '{name}' deleted.")
+                flag=True
+                break
+        if not flag:
+            print(f"Task with name '{name}' not found.")
+
+    def display(self):
+        if not self.tasks:
+            print("No tasks available")
+        else:
+            print("Listing all tasks:")
+            print(self.tasks.items())
+
+    def search_tasks(self, search_term):
+        found = False
+        for task_id, details in self.tasks.items():
+            if details['name'] == search_term or task_id == search_term:
+                print(f"Found Task - ID: {task_id}, Name: {details['name']}, Status: {details['status']}")
+                found = True
+        if not found:
+            print(f"No task found with name or ID '{search_term}'.")
+
+    def list_by_last_letter(self, letter):
+        found = False
+        for task_id, details in self.tasks.items():
+            if details['name'][-1]==letter:
+                print(f"Task - ID: {task_id}, Name: {details['name']}, Status: {details['status']}")
+                found = True
+        if not found:
+            print(f"No tasks found ending with letter '{letter}'.")
+
+def main():
+    manager = TaskManager()
+    while True:
+        print("1. Add Task")
+        print("2. Update Task")
+        print("3. Delete Task")
+        print("4. List All Tasks")
+        print("5. Search Tasks")
+        print("6. List Tasks by Last Letter")
+        print("7. Exit")
+
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            task_id = input("Enter task ID: ")
+            name = input("Enter task name: ")
+            status = input("Enter task status: ")
+            manager.add_task(task_id, name, status)
+        
+        elif choice == '2':
+            task_id = input("Enter task ID to update: ")
+            name = input("Enter new task name: ")
+            status = input("Enter new task status: ")
+            manager.update_task(task_id, name if name else None, status if status else None)
+        
+        elif choice == '3':
+            name = input("Enter task name to delete: ")
+            manager.delete_task(name)
+        
+        elif choice == '4':
+            manager.display()
+        
+        elif choice == '5':
+            key = input("Enter task name or ID to search: ")
+            manager.search_tasks(key)
+        
+        elif choice == '6':
+            letter = input("Enter the last letter to filter tasks by: ")
+            manager.list_by_last_letter(letter)
+        
+        elif choice == '7':
+            print("Exit")
+            break
+        
+        else:
+            print("Invalid Choice")
+
+if __name__ == "__main__":
+    main()
